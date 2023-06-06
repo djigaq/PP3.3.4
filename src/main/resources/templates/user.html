@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>USER PAGE</title>
+    <style>
+        .btn-secondary {
+            background-color: transparent;
+            color: #fff; /* цвета текста на кнопке */
+            border: none; /* убираем границу кнопки */
+            color: #808080; /* меняем цвет букв */
+        }
+        .custom-btn {
+            margin-top: 10px;
+            width: 250px; /* меняем длину кнопки*/
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+        <h4 th:text="${authUser.getUsername()} + '  with roles:  ' +  ${authUser.getRoles().toString().replace('[', '').replace(']', '')}"
+            class="navbar-brand">USER</h4>
+        <a href="/logout">
+            <button type="button" class="btn btn-secondary">Logout</button>
+        </a>
+    </div>
+</nav>
+
+<section>
+    <div class="container-fluid">
+        <div class="row">
+            <! кнопки ADMIN, USER>
+            <div class="col-2 p-0 mt-2">
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li th:each="role : ${authRoles}"
+                        th:if="${role.authority.contains('ROLE_ADMIN')}" class="nav-item">
+                        <a th:href="@{/admin}" class="nav-link link-dark"
+                           aria-current="page">
+                            Admin
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/user}" class="nav-link active custom-btn">
+                            User
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <! Таблица пользователей>
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4 bg-light hmax min-vh-100">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 ">
+                    <h1>User information-page</h1>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h4>
+                            About user
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th> ID</th>
+                                <th> First Name</th>
+                                <th> Last Name</th>
+                                <th> Age</th>
+                                <th> Email</th>
+                                <th> Role</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><span th:text=" ${authUser.id}"> ID </span></td>
+                                <td><span th:text=" ${authUser.name}"> First Name </span></td>
+                                <td><span th:text=" ${authUser.surname}"> Last Name </span></td>
+                                <td><span th:text=" ${authUser.age}"> Age </span></td>
+                                <td><span th:text=" ${authUser.email}"> Email </span></td>
+                                <td><span th:each="role : ${authUser.getRoles()}">
+                                            <span th:text="${role.getAuthority().replace('ROLE_', '')}"> Role</span> </span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</section>
+</body>
+</html>
